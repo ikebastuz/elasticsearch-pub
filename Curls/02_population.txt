@@ -1,0 +1,211 @@
+[01]
+POST population/_search?pretty
+{
+  "size": 0, 
+  "aggregations": {
+    "time_interval_agg": {
+      "date_histogram": {
+        "field": "timestamp",
+        "fixed_interval": "1h"
+      }
+    }
+  }
+}
+
+[02]
+
+POST population/_search?pretty
+{
+  "size": 0, 
+  "aggregations": {
+    "time_interval_agg": {
+      "date_histogram": {
+        "field": "timestamp",
+        "fixed_interval": "1d"
+      },
+      "aggs": {
+        "gender_agg": {
+          "filters": {
+            "filters": {
+              "male": {
+                "query_string": {
+                  "query": "gender:male"
+                }
+              },
+              "female": {
+                "query_string": {
+                  "query": "gender:female"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+[03]
+
+POST population/_search?pretty
+{
+  "size": 0, 
+  "aggregations": {
+    "time_interval_agg": {
+      "date_histogram": {
+        "field": "timestamp",
+        "fixed_interval": "1d"
+      },
+      "aggs": {
+        "gender_agg": {
+          "filters": {
+            "filters": {
+              "male": {
+                "query_string": {
+                  "query": "gender:male"
+                }
+              },
+              "female": {
+                "query_string": {
+                  "query": "gender:female"
+                }
+              }
+            }
+          },
+          "aggs": {
+            "age_agg": {
+              "range": {
+                "field": "age",
+                "ranges": [
+                  {
+                    "key": "child",
+                    "from": 0,
+                    "to": 10
+                  },
+                  {
+                    "key": "teenager",
+                    "from": 10,
+                    "to": 20
+                  },
+                  {
+                    "key": "young",
+                    "from": 20,
+                    "to": 30
+                  },
+                  {
+                    "key": "adult",
+                    "from": 30,
+                    "to": 40
+                  },
+                  {
+                    "key": "middle",
+                    "from": 40,
+                    "to": 50
+                  },
+                  {
+                    "key": "senior",
+                    "from": 50,
+                    "to": 60
+                  },
+                  {
+                    "key": "old",
+                    "from": 60
+                  }
+                ],
+                "keyed": true
+              }
+            }
+          }
+
+        }
+      }
+    }
+  }
+}
+
+[04]
+POST population/_search?pretty
+{
+  "size": 0, 
+  "aggregations": {
+    "time_interval_agg": {
+      "date_histogram": {
+        "field": "timestamp",
+        "fixed_interval": "1d"
+      },
+      "aggs": {
+        "gender_agg": {
+          "filters": {
+            "filters": {
+              "male": {
+                "query_string": {
+                  "query": "gender:male"
+                }
+              },
+              "female": {
+                "query_string": {
+                  "query": "gender:female"
+                }
+              }
+            }
+          },
+          "aggs": {
+            "age_agg": {
+              "range": {
+                "field": "age",
+                "ranges": [
+                  {
+                    "key": "child",
+                    "from": 0,
+                    "to": 10
+                  },
+                  {
+                    "key": "teenager",
+                    "from": 10,
+                    "to": 20
+                  },
+                  {
+                    "key": "young",
+                    "from": 20,
+                    "to": 30
+                  },
+                  {
+                    "key": "adult",
+                    "from": 30,
+                    "to": 40
+                  },
+                  {
+                    "key": "middle",
+                    "from": 40,
+                    "to": 50
+                  },
+                  {
+                    "key": "senior",
+                    "from": 50,
+                    "to": 60
+                  },
+                  {
+                    "key": "old",
+                    "from": 60
+                  }
+                ],
+                "keyed": true
+              }
+            }
+          }
+        },
+        "avg_age":{
+          "avg": {
+            "field": "age"
+          }
+        }
+      }
+    }
+  }
+}
+
+[05]
+POST _sql?format=txt
+{
+  "query": "SELECT age, gender from population WHERE age > 21 ORDER BY age DESC LIMIT 5"
+}

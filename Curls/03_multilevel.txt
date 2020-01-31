@@ -1,0 +1,22 @@
+[01]
+POST multilevel/_doc/
+{
+  "persons": [
+    {
+      "data": {
+        "gender": "male",
+        "age": 30
+      },
+      "race": "white",
+      "country": "belarus"
+    },
+    {
+      "data": {
+        "gender": "female",
+        "age": 25
+      },
+      "race": "mongoloid",
+      "country": "china"
+    }
+  ]
+}

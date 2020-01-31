@@ -1,0 +1,215 @@
+[01]
+PUT /catblog/_create/1?pretty
+{
+  "title": "Веселые котята",
+  "content": "<p>Смешная история про котят<p>",
+  "tags": [
+    "котята",
+    "смешная история"
+  ],
+  "published_at": "2019-09-12T20:44:42+00:00"
+}
+
+[02]
+GET /catblog/_mapping?pretty
+
+[03]
+GET /catblog/_doc/1?pretty
+
+[04]
+GET /catblog/_doc/1?_source=title,tags&pretty
+
+[05]
+PUT /catblog/_create/2?pretty
+{
+  "title": "Веселые щенки",
+  "content": "<p>Смешная история про щенков<p>",
+  "tags": [
+    "щенки",
+    "смешная история"
+  ],
+  "published_at": "2019-08-12T20:44:42+00:00"
+}
+
+PUT /catblog/_create/3?pretty
+{
+  "title": "Как у меня появился котенок",
+  "content": "<p>Душераздирающая история про бедного котенка с улицы<p>",
+  "tags": [
+    "котята"
+  ],
+  "published_at": "2019-07-21T20:44:42+00:00"
+}
+
+[06]
+GET /catblog/_search?pretty
+{
+  "size": 1,
+  "_source": ["title", "published_at"],
+  "sort": [{"published_at": "desc"}]
+}
+
+[07]
+GET /catblog/_search?pretty
+{
+  "_source": ["title", "tags"],
+  "query": {
+    "term": {
+      "tags": "котята"
+    }
+  }
+}
+
+[08]
+GET /catblog/_search?pretty
+{
+  "_source": false,
+  "query": {
+    "match": {
+      "content": "история"
+    }
+  }
+}
+
+[09]
+GET /_analyze
+{
+  "analyzer" : "standard",
+  "text" : "Веселые истории про котят"
+}
+
+[10]
+{
+  "filter": {
+    "ru_stop": {
+      "type":       "stop",
+      "stopwords":  "_russian_"
+    },
+    "ru_stemmer": {
+      "type":       "stemmer",
+      "language":   "russian"
+    }
+  },
+  "analyzer": {
+    "default": {
+      "char_filter": ["html_strip"],
+      "tokenizer":  "standard",
+      "filter": [
+        "lowercase",
+        "ru_stop",
+        "ru_stemmer"
+      ]
+    }
+  }
+}
+
+[11]
+PUT /catblog_v2
+{
+  "settings": {
+    "analysis": {
+      "filter": {
+        "ru_stop": {
+          "type": "stop",
+          "stopwords": "_russian_"
+        },
+        "ru_stemmer": {
+          "type": "stemmer",
+          "language": "russian"
+        }
+      },
+      "analyzer": {
+        "default": {
+          "char_filter": [
+            "html_strip"
+          ],
+          "tokenizer": "standard",
+          "filter": [
+            "lowercase",
+            "ru_stop",
+            "ru_stemmer"
+          ]
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "content": {
+        "type": "text"
+      },
+      "published_at": {
+        "type": "date"
+      },
+      "tags": {
+        "type": "keyword"
+      },
+      "title": {
+        "type": "text"
+      }
+    }
+  }
+}
+
+[12]
+PUT /catblog_v2/_create/1?pretty
+{
+  "title": "Веселые котята",
+  "content": "<p>Смешная история про котят<p>",
+  "tags": [
+    "котята",
+    "смешная история"
+  ],
+  "published_at": "2019-09-12T20:44:42+00:00"
+}
+
+PUT /catblog_v2/_create/2?pretty
+{
+  "title": "Веселые щенки",
+  "content": "<p>Смешная история про щенков<p>",
+  "tags": [
+    "щенки",
+    "смешная история"
+  ],
+  "published_at": "2019-08-12T20:44:42+00:00"
+}
+
+PUT /catblog_v2/_create/3?pretty
+{
+  "title": "Как у меня появился котенок",
+  "content": "<p>Душераздирающая история про бедного котенка с улицы<p>",
+  "tags": [
+    "котята"
+  ],
+  "published_at": "2019-07-21T20:44:42+00:00"
+}
+
+[13]
+GET /catblog_v2/_search?pretty
+{
+  "query": {
+    "simple_query_string": {
+      "query": "истории",
+      "fields": [
+        "title^3",
+        "tags^2",
+        "content"
+      ]
+    }
+  }
+}
+
+[14]
+GET /catblog_v2/_search?pretty
+{
+  "query": {
+    "simple_query_string": {
+      "query": "-щенки",
+      "fields": [
+        "title^3",
+        "tags^2",
+        "content"
+      ]
+    }
+  }
+}

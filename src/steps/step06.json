@@ -1,0 +1,28 @@
+[
+  {
+    "persons": [
+      {
+        "data": {
+          "gender": "male",
+          "age": 30
+        },
+        "race": "white",
+        "country": "belarus"
+      },
+      {
+        "data": {
+          "gender": "female",
+          "age": 25
+        },
+        "race": "mongoloid",
+        "country": "china"
+      }
+    ]
+  },
+  {
+    "persons.data.gender": ["male", "female"],
+    "persons.data.age": [30, 25],
+    "persons.race": ["white", "mongoloid"],
+    "persons.country": ["belarus", "china"]
+  }
+]
